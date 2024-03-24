@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
+import time
 
 class NN(nn.Module): # Neural network class
     def __init__(self, input_size, num_classes): # 28*28=784
@@ -26,7 +27,7 @@ input_size = 28*28 # Hyperparameter
 num_classes = 10
 learning_rate = 0.001
 batch_size = 64
-num_epochs = 1
+num_epochs = 5
 
 train_dataset = datasets.MNIST(root='dataset/', train=True, download=True, transform=transforms.ToTensor()) # Load dataset
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -39,6 +40,7 @@ criterion = nn.CrossEntropyLoss() # Loss function
 optimizer = optim.Adam(model.parameters(), lr=learning_rate) # Optimizer
 
 for epoch in range(num_epochs): # Training loop
+    start = time.time()
     for batch_idx, (data, target) in enumerate(train_loader):
         data, target = data.to(device), target.to(device) # Get data to CUDO if possible
         data = data.reshape(data.shape[0], -1) # Reshape data to fit the model
@@ -47,7 +49,7 @@ for epoch in range(num_epochs): # Training loop
         optimizer.zero_grad() # Clear gradients for this training step
         loss.backward() # Backpropagation
         optimizer.step() # Update weights
-    print('Epoch: {}/{}... Loss: {:.4f}'.format(epoch+1, num_epochs, loss.item()))
+    print('Epoch: {}/{}... Loss: {:.4f}, time spent: {:.2f} sec.'.format(epoch+1, num_epochs, loss.item(), time.time() - start))
 
 
 def check_accuracy(loader, model): # Check accuracy of model
