@@ -1,3 +1,4 @@
+# Pytorch Neural Network example (https://youtu.be/Jy4wM2X21u0?si=iK-0psrKyzNKYFu0)
 import torch # Imports
 import torch.nn as nn
 import torch.optim as optim
