@@ -1,4 +1,4 @@
-import torch
+import torch # Imports
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 
-class NN(nn.Module):
+class NN(nn.Module): # Neural network class
     def __init__(self, input_size, num_classes): # 28*28=784
         super(NN, self).__init__()
         self.fc1 = nn.Linear(input_size, 50)
