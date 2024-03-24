@@ -29,7 +29,9 @@ class RNN(nn.Module): # RNN class
         # self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True) # N*time_seq*features
         # self.gru = nn.GRU(input_size, hidden_size, num_layers, batch_first=True) # N*time_seq*features
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True) # N*time_seq*features
-        self.fc = nn.Linear(hidden_size*sequence_length, num_classes)
+        # self.fc = nn.Linear(hidden_size*sequence_length, num_classes)
+        # LSTM only
+        self.fc = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device) # Initialize hidden state
@@ -38,8 +40,10 @@ class RNN(nn.Module): # RNN class
 
         # out, _ = self.gru(x, h0) # Forward pass
         out, _ = self.lstm(x, (h0, c0)) # Forward pass
-        out = out.reshape(out.size(0), -1) # Reshape output
-        out = self.fc(out) # Linear layer
+        # out = out.reshape(out.size(0), -1) # Reshape output but LSTM
+        # out = self.fc(out) # Linear layer
+        # LSTM only
+        out = self.fc(out[:,-1,:]) # Linear layer
         return out
 
 
