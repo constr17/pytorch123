@@ -27,16 +27,21 @@ class RNN(nn.Module): # RNN class
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         # self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True) # N*time_seq*features
-        self.gru = nn.GRU(input_size, hidden_size, num_layers, batch_first=True) # N*time_seq*features
+        # self.gru = nn.GRU(input_size, hidden_size, num_layers, batch_first=True) # N*time_seq*features
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True) # N*time_seq*features
         self.fc = nn.Linear(hidden_size*sequence_length, num_classes)
 
     def forward(self, x):
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device) # Initialize hidden state
+        # For LSTM only
+        c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device)
 
-        out, _ = self.gru(x, h0) # Forward pass
+        # out, _ = self.gru(x, h0) # Forward pass
+        out, _ = self.lstm(x, (h0, c0)) # Forward pass
         out = out.reshape(out.size(0), -1) # Reshape output
         out = self.fc(out) # Linear layer
         return out
+
 
 train_dataset = datasets.MNIST(root='dataset/', train=True, download=True, transform=transforms.ToTensor()) # Load dataset
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
