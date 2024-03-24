@@ -8,21 +8,11 @@ import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 import time
 
-class NN(nn.Module): # Neural network class
-    def __init__(self, input_size, num_classes): # 28*28=784
-        super(NN, self).__init__()
-        self.fc1 = nn.Linear(input_size, 50)
-        self.fc2 = nn.Linear(50, num_classes)
-
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x
 
 class CNN(nn.Module): # CNN class
     def __init__(self, in_channels = 1, num_classes = 10):
         super(CNN, self).__init__()
-        # n_out = (n_in + 2*padding - kernel_size)//stride + 1 = (28 + 2*1 - 3)//1 + 1 = 28
+        # n_out = (n_in + 2 * padding - kernel_size)//stride + 1 = (28 + 2*1 - 3)//1 + 1 = 28
         self.conv1 = nn.Conv2d(in_channels = 1, out_channels = 8, kernel_size=(3,3), stride=(1,1), padding=(1,1))
         self.pool = nn.MaxPool2d(kernel_size=(2,2), stride=(2,2))
         self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
