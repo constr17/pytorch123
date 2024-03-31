@@ -9,10 +9,11 @@ from skimage import io
 
 
 class CatsAndDogsDataset(Dataset):
-    def __init__(self, csv_file, root_dir, transform=None):
+    def __init__(self, csv_file, root_dir, train, transform=None):
         self.annotations = pd.read_csv(Path(root_dir)/csv_file)
         self.root_dir = root_dir
         self.transform = transform
+        self.train = train
 
     def __len__(self):
         return len(self.annotations)

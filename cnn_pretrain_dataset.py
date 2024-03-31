@@ -23,13 +23,13 @@ batch_size = 10
 num_epochs = 5
 
 # Load dataset
-train_dataset = CatsAndDogsDataset(csv_file='train.csv', root_dir='./dataset/cats_dogs/', transform=transforms.Compose([
+train_dataset = CatsAndDogsDataset(csv_file='train.csv', root_dir='./dataset/cats_dogs/', train=True, transform=transforms.Compose([
     transforms.ToPILImage(),  # Convert NumPy arrays to PIL Images
     transforms.Resize((256, 256)),  # Resize images to 256x256
     transforms.ToTensor(),  # Convert PIL image to Tensor
 ]))
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True) # Create data loader
-test_dataset = CatsAndDogsDataset(csv_file='val.csv', root_dir='./dataset/cats_dogs/', transform=transforms.Compose([
+test_dataset = CatsAndDogsDataset(csv_file='val.csv', root_dir='./dataset/cats_dogs/', train=False, transform=transforms.Compose([
     transforms.ToPILImage(),  # Convert NumPy arrays to PIL Images
     transforms.Resize((256, 256)),  # Resize images to 256x256
     transforms.ToTensor(),  # Convert PIL image to Tensor
@@ -66,8 +66,8 @@ for epoch in range(num_epochs): # Training loop
     print('Epoch: {}/{}... Loss: {:.4f}, time spent: {:.2f} sec.'.format(epoch+1, num_epochs, loss.item(), time.time() - start))
 
 
-def check_accuracy(loader, model, train): # Check accuracy of model
-    if train: # If training set
+def check_accuracy(loader, model): # Check accuracy of model
+    if loader.dataset.train: # If training set
         print('Training set')
     else: # If test set
         print('Test set')
@@ -85,7 +85,7 @@ def check_accuracy(loader, model, train): # Check accuracy of model
     model.train()
 
 
-check_accuracy(train_loader, model, True)
-check_accuracy(test_loader, model, False)
+check_accuracy(train_loader, model)
+check_accuracy(test_loader, model)
 
 print(f'Time spent: {time.time() - start_time:.2f} sec.')
