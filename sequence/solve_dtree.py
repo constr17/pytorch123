@@ -43,3 +43,41 @@ accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy, "Duration:", time.time() - start_time)
 # RandomForestClassifier Accuracy: 0.8433609958506224
 # DecisionTreeClassifier Accuracy: 0.7525933609958506 Duration: 948.7821686267853
+# RandomForestClassifier Accuracy: 0.8428423236514523 Duration: 1688.030225276947 n_estimators=200
+# RandomForestClassifier Accuracy: 0.8485477178423236 Duration: 171.87895274162292 n_estimators=100, max_depth=10
+# RandomForestClassifier Accuracy: 0.8433609958506224 Duration: 237.83010005950928 n_estimators=100, max_depth=15
+
+
+# **Основные:**
+#
+# * `n_estimators`: Количество деревьев в лесу. Увеличивайте, пока производительность не перестанет улучшаться (больше - лучше, но медленнее).
+# * `max_depth`: Максимальная глубина каждого дерева. Контролирует сложность модели (слишком большая глубина ведет к переобучению).
+# * `min_samples_split`: Минимальное количество выборок для разделения узла дерева.
+# * `min_samples_leaf`: Минимальное количество выборок в листе дерева.
+# * `max_features`: Количество признаков, рассматриваемых при поиске лучшего разделения (`"sqrt"`, `"log2"`,  число, процент от общего количества).
+#
+# **Дополнительные:**
+#
+# * `criterion`: Функция измерения качества разделения (`"gini"`, `"entropy"`).
+# * `bootstrap`: Использовать ли бутстрап выборок для обучения каждого дерева (`True`, `False`).
+# * `class_weight`: Веса классов для несбалансированных данных (`"balanced"`, словарь весов, `None`).
+#
+# **Пример тюнинга с помощью GridSearchCV:**
+#
+# ```python
+# from sklearn.model_selection import GridSearchCV
+#
+# param_grid = {
+#     'n_estimators': [50, 100, 200],
+#     'max_depth': [None, 5, 10],
+#     'min_samples_split': [2, 5],
+#     'max_features': ['sqrt', 'log2'],
+# }
+#
+# model = RandomForestClassifier(random_state=42)
+# grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+# grid_search.fit(X_train, y_train)
+#
+# print("Best parameters:", grid_search.best_params_)
+# ```
+# https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
