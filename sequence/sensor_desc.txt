@@ -1,0 +1,3 @@
+sensor_data.npy
+problem_sensors: {'problem_1': [1, 5, 10], 'problem_2': [15, 20, 25], 'problem_3': [30, 35, 40]}
+problem_end_indices: [6117, 2162, 6319, 7712, 2545, 8713, 599, 3346, 3783]
