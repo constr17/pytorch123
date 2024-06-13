@@ -17,7 +17,7 @@ data = np.load("sensor_data.npy")
 # data = data[:, columns_to_select]
 
 param_grid = {
-    'n_estimators': [50, 100],  # , 200
+    'n_estimators': [50, 100, 200],
     'max_depth': [None, 5, 10],
     'min_samples_split': [2, 5],
     'max_features': ['sqrt', 'log2'],
@@ -43,21 +43,21 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # Создание и обучение модели
 # Используйте DecisionTreeClassifier или RandomForestClassifier
-model = RandomForestClassifier(verbose=2)
+model = RandomForestClassifier(verbose=2, max_depth=None, max_features='sqrt', min_samples_split=5, n_estimators=50)
 # model = DecisionTreeClassifier()
-# model.fit(X_train, y_train)
-grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
-grid_search.fit(X_train, y_train)
+model.fit(X_train, y_train)
+# grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+# grid_search.fit(X_train, y_train)
 
-print("Best parameters:", grid_search.best_params_)
+# print("Best parameters:", grid_search.best_params_)
 
 # Прогнозирование
-# y_pred = model.predict(X_test)
+y_pred = model.predict(X_test)
 
 # Оценка точности
-# accuracy = accuracy_score(y_test, y_pred)
-print("Duration:", time.time() - start_time)
-# print("Accuracy:", accuracy, "Duration:", time.time() - start_time)
+accuracy = accuracy_score(y_test, y_pred)
+# print("Duration:", time.time() - start_time)
+print("Accuracy:", accuracy, "Duration:", time.time() - start_time)
 
 # RandomForestClassifier Accuracy: 0.8433609958506224
 # DecisionTreeClassifier Accuracy: 0.7525933609958506 Duration: 948.7821686267853
@@ -65,6 +65,9 @@ print("Duration:", time.time() - start_time)
 # RandomForestClassifier Accuracy: 0.8485477178423236 Duration: 171.87895274162292 n_estimators=100, max_depth=10
 # RandomForestClassifier Accuracy: 0.8433609958506224 Duration: 237.83010005950928 n_estimators=100, max_depth=15
 # RandomForestClassifier Accuracy: 0.8350622406639004 Duration: 228.96248817443848 Значимые столбцы
+# Best parameters: {'max_depth': None, 'max_features': 'sqrt', 'min_samples_split': 5, 'n_estimators': 50}
+# Duration: 17358.528499126434
+# RandomForestClassifier Accuracy: 0.8521784232365145 Duration: 209.097026348114 max_depth=None, max_features='sqrt', min_samples_split=5, n_estimators=50
 
 # **Основные:**
 #
