@@ -20,10 +20,11 @@ num_layers = 2  # Количество слоёв LSTM
 output_size = 1  # Бинарная классификация (проблема или нет)
 batch_size = 64
 learning_rate = 0.001
-num_epochs = 10
+num_epochs = 20
 
 # Устройство (CPU или GPU)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f'Using {device}')
 
 # Создание окон и целевой переменной
 X = []
@@ -51,8 +52,8 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 class LSTMModel(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, output_size):
         super(LSTMModel, self).__init__()
-        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True)
-        self.fc = nn.Linear(hidden_size, output_size)
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, bidirectional=True)
+        self.fc = nn.Linear(hidden_size * 2, output_size)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
@@ -81,6 +82,8 @@ for epoch in range(num_epochs):
         # Обратное распространение ошибки и обновление весов
         loss.backward()
         optimizer.step()
+    print('Epoch: {}/{}... Loss: {:.4f}, time spent: {:.2f} sec.'.format(epoch + 1, num_epochs, loss.item(),
+                                                                             time.time() - start_time))
 
 # Оценка модели
 with torch.no_grad():
@@ -90,3 +93,8 @@ with torch.no_grad():
     print(f'Accuracy: {accuracy.item():.4f} Duration: {time.time() - start_time:.2f}s')
 
 # Accuracy: 0.8361 Duration: 32.71s
+# Accuracy: 0.8361 Duration: 54.70s num_layers=3
+# Accuracy: 0.8402 Duration: 70.43s bidirectional=True
+# Accuracy: 0.8361 Duration: 109.55s num_layers=3, bidirectional=True
+# Accuracy: 0.8439 Duration: 138.22s bidirectional=True, num_epochs = 20
+# Accuracy: 0.8366 Duration: 138.32s bidirectional=True, num_epochs = 20, learning_rate = 0.0001
