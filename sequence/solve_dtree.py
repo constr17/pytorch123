@@ -4,6 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
+import matplotlib.pyplot as plt
 import time
 
 start_time = time.time()
@@ -39,11 +40,11 @@ X = np.array(X)
 y = np.array(y)
 
 # Разделение на обучающий и тестовый наборы
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=12)
 
 # Создание и обучение модели
 # Используйте DecisionTreeClassifier или RandomForestClassifier
-model = RandomForestClassifier(verbose=2, max_depth=None, max_features='sqrt', min_samples_split=5, n_estimators=50)
+model = RandomForestClassifier(verbose=2, n_jobs=-1, max_depth=None, max_features='sqrt', min_samples_split=5, n_estimators=50)
 # model = DecisionTreeClassifier()
 model.fit(X_train, y_train)
 # grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
@@ -58,6 +59,21 @@ y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 # print("Duration:", time.time() - start_time)
 print("Accuracy:", accuracy, "Duration:", time.time() - start_time)
+
+print(sum(y_pred == y_test) / len(y_test), sum(y_pred), sum(y_test))
+plt.plot(y_pred, label="Predicted")
+plt.plot(y_test, label="Actual")
+plt.legend()
+plt.show()
+
+Y_total_pred = model.predict(X)
+print("Total", sum(Y_total_pred == y)/len(y))
+# Accuracy: 0.8345435684647303 Duration: 21.848129749298096
+
+plt.plot(Y_total_pred, label="Total predicted")
+plt.plot(y, label="Total actual")
+plt.legend()
+plt.show()
 
 # RandomForestClassifier Accuracy: 0.8433609958506224
 # DecisionTreeClassifier Accuracy: 0.7525933609958506 Duration: 948.7821686267853

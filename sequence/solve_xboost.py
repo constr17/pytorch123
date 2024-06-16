@@ -3,6 +3,7 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import cupy as cp  # Импортируем cuXfilter: pip install cupy-cuda12x
+import matplotlib.pyplot as plt
 import time
 
 start_time = time.time()
@@ -25,7 +26,7 @@ X = np.array(X)
 y = np.array(y)
 
 # Разделение данных на обучающий и тестовый наборы
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=12)
 
 # Переносим данные на GPU
 X_train_gpu = cp.array(X_train)
@@ -41,7 +42,8 @@ model = XGBClassifier(
     learning_rate=0.1,
     subsample=0.8,
     colsample_bytree=0.8,
-    random_state=42
+    random_state=42,
+    n_jobs=-1
 )
 
 model.fit(X_train_gpu, y_train_gpu)
@@ -53,9 +55,18 @@ y_pred = model.predict(X_test_gpu)
 y_pred_np = cp.asnumpy(y_pred)
 
 # Оценка точности
+print(sum(y_pred == y_test) / len(y_test), sum(y_pred), sum(y_test), sum(y_pred == y_test), len(y_test))
 accuracy = accuracy_score(y_test, y_pred_np)
 print("Accuracy:", accuracy, "Duration:", time.time() - start_time)
+Y_total_pred = model.predict(cp.asnumpy(X))
+print("Total", sum(Y_total_pred == y)/len(y))
 # Accuracy: 0.8345435684647303 Duration: 21.848129749298096
+
+plt.plot(Y_total_pred, label="Total predicted")
+plt.plot(y, label="Total actual")
+plt.legend()
+plt.show()
+
 
 # **Основные:**
 #
