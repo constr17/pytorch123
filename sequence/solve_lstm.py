@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from torch.utils.data import TensorDataset, DataLoader
+import matplotlib.pyplot as plt
 import time
 
 start_time = time.time()
@@ -91,6 +92,7 @@ with torch.no_grad():
     predicted = (outputs > 0.5).float()  # Пороговое значение для классификации
     accuracy = (predicted == y_test_tensor.unsqueeze(1)).float().mean()
     print(f'Accuracy: {accuracy.item():.4f} Duration: {time.time() - start_time:.2f}s')
+    torch.cuda.empty_cache()
 
 # Accuracy: 0.8361 Duration: 32.71s
 # Accuracy: 0.8361 Duration: 54.70s num_layers=3
