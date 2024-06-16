@@ -1,6 +1,7 @@
 """Пример рядов данных."""""
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Параметры данных
 num_samples = 10000  # Количество временных шагов
@@ -53,3 +54,12 @@ with open("sensor_desc.txt", "w") as f:
     f.write("sensor_data.npy\nproblem_sensors: ")
     f.write(str(problem_sensors) + "\nproblem_end_indices: ")
     f.write(str(problem_end_indices) + "\n")
+
+plt.plot(data[:, 0], alpha=0.5, label="standard")
+plt.plot(data[:, 1], alpha=0.5, label="deviated")
+plt.plot(data[:, 15], alpha=0.5, label="deviated")
+plt.plot(data[:, 30], alpha=0.5, label="deviated")
+plt.plot(-data[:, -1], label="indicator", color="black")
+plt.grid()
+plt.legend()
+plt.show()
